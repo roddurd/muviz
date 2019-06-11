@@ -28,7 +28,7 @@ def save_image(image, filename):
     image = image.astype(np.uint8)    
     # Write the image-file in jpeg-format.
     with open(filename, 'wb') as file:
-        PIL.Image.fromarray(image).save(file, 'jpeg')
+        PIL.Image.fromarray(image).save(filename + ".jpeg")
 def plot_image(image):      
     if False:        
         image = np.clip(image/255.0, 0.0, 1.0)
@@ -73,11 +73,6 @@ def get_tile_size(num_pixels, tile_size=400):
     num_tiles = max(1, num_tiles)    
     actual_tile_size = math.ceil(num_pixels / num_tiles)    
     return actual_tile_size
-
-
-# In[4]:
-
-
 def tiled_gradient(gradient, image, tile_size=400):
     # Allocate an array for the gradient of the entire image.
     grad = np.zeros_like(image)
@@ -237,10 +232,6 @@ for subdir, dirs, files in os.walk(datadir):
 	for i, file in enumerate(files):
 		print("file", i, ":", file)
 		image = load_image(filename="data/" + file)
-		layer_tensor = model.layer_tensors[3] #CHOOSING WHICH LAYER OF THE NET TO OPTIMIZE
-
-		img_result = recursive_optimize(layer_tensor=model.layer_tensors[8], image=image,
- num_iterations=10, step_size=3.0, rescale_factor=0.7,
-				 num_repeats=4, blend=0.2) #num iterations was 10, repeats was 4   
-		save_image(img_result, "sidelook"+str(i))
+		img_result = recursive_optimize(layer_tensor=model.layer_tensors[8], image=image, num_iterations=10, step_size=3.0, rescale_factor=0.7, num_repeats=4, blend=0.2)
+		save_image(img_result, "slapper"+str(i))
 
