@@ -17,7 +17,7 @@ class Vidsplitter:
 		currentFrame = 0
 		while (ret):
 			ret, frame = self.video.read()
-			name = './data/frame' + str(currentFrame) + '.jpg'
+			name = './data/' + str(currentFrame) + 'frame.jpg'
 			if not os.path.isfile(name) and currentFrame % self.factor == 0:
 
 				print('Creating...' + name)
