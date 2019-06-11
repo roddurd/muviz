@@ -13,8 +13,9 @@ class Vidsplitter:
 		except OSError:
 			print('Error creating directory of data')
 
+		ret, frame = self.video.read()
 		currentFrame = 0
-		while (True):
+		while (ret):
 			ret, frame = self.video.read()
 			name = './data/frame' + str(currentFrame) + '.jpg'
 			print('Creating...' + name)
