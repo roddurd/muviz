@@ -18,8 +18,9 @@ class Vidsplitter:
 		while (ret):
 			ret, frame = self.video.read()
 			name = './data/frame' + str(currentFrame) + '.jpg'
-			print('Creating...' + name)
-			if currentFrame % self.factor == 0:
+			if not os.path.isfile(name) and currentFrame % self.factor == 0:
+
+				print('Creating...' + name)
 				cv2.imwrite(name, frame)
 			currentFrame += 1
 		self.video.release()

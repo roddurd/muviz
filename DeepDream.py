@@ -5,7 +5,6 @@
 
 
 #Dependencies
-get_ipython().magic('matplotlib inline')
 import matplotlib.pyplot as plt
 import tensorflow as tf
 import numpy as np
@@ -227,21 +226,21 @@ session = tf.InteractiveSession(graph=model.graph)
 
 import vidsplit
 import os
-projdir = os.path.join(os.path.dirname(__file__), "..")
+projdir = os.path.dirname(os.path.abspath(__file__))
 datadir = os.path.join(projdir, "data")
 
 images = vidsplit.Vidsplitter("video.mp4")
 images.split()
-
+print("projdir:", projdir)
+print("datdir:", datadir)
 for subdir, dirs, files in os.walk(datadir):
-    for file in files:
-        print os.path.join(subdir, file)
+	for i, file in enumerate(files):
+		print("file", i, ":", file)
+		image = load_image(filename="data/" + file)
+		layer_tensor = model.layer_tensors[3] #CHOOSING WHICH LAYER OF THE NET TO OPTIMIZE
 
-	image = load_image(filename=file)
-	layer_tensor = model.layer_tensors[3] #CHOOSING WHICH LAYER OF THE NET TO OPTIMIZE
-
-	img_result = recursive_optimize(layer_tensor=model.layer_tensors[8], image=image,
-			 num_iterations=10, step_size=3.0, rescale_factor=0.7,
-			 num_repeats=4, blend=0.2) #num iterations was 10, repeats was 4   
-	save_image(img_result, "sidelook"+str(i))
+		img_result = recursive_optimize(layer_tensor=model.layer_tensors[8], image=image,
+ num_iterations=10, step_size=3.0, rescale_factor=0.7,
+				 num_repeats=4, blend=0.2) #num iterations was 10, repeats was 4   
+		save_image(img_result, "sidelook"+str(i))
 
