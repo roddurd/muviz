@@ -21,11 +21,6 @@ inception5h.maybe_download()
 model = inception5h.Inception5h()
 
 
-# #### Helper Functions
-
-# In[3]:
-
-
 def load_image(filename):
     image = PIL.Image.open(filename)
     return np.float32(image)
@@ -141,9 +136,6 @@ def tiled_gradient(gradient, image, tile_size=400):
     return grad
 
 
-# In[5]:
-
-
 def optimize_image(layer_tensor, image,
                    num_iterations=10, step_size=3.0, tile_size=400,
                    show_gradient=False):
@@ -228,26 +220,28 @@ def recursive_optimize(layer_tensor, image,
     return img_result
 
 
-# ### LET THE DREAMING BEGIN
 
-# In[7]:
-
-
+#starter code
 session = tf.InteractiveSession(graph=model.graph)
 
 
-# In[8]:
+import vidsplit
+import os
+projdir = os.path.join(os.path.dirname(__file__), "..")
+datadir = os.path.join(projdir, "data")
 
+images = vidsplit.Vidsplitter("video.mp4")
+images.split()
 
-image = load_image(filename='sidelook.jpeg')
-layer_tensor = model.layer_tensors[7] #CHOOSING WHICH LAYER OF THE NET TO OPTIMIZE
+for subdir, dirs, files in os.walk(datadir):
+    for file in files:
+        print os.path.join(subdir, file)
 
+	image = load_image(filename=file)
+	layer_tensor = model.layer_tensors[3] #CHOOSING WHICH LAYER OF THE NET TO OPTIMIZE
 
-# In[ ]:
-
-
-img_result = recursive_optimize(layer_tensor=model.layer_tensors[8], image=image,
-                 num_iterations=10, step_size=3.0, rescale_factor=0.7,
-                 num_repeats=4, blend=0.2) #num iterations was 10, repeats was 4   
-save_image(img_result, "sidelook"+str(i))
+	img_result = recursive_optimize(layer_tensor=model.layer_tensors[8], image=image,
+			 num_iterations=10, step_size=3.0, rescale_factor=0.7,
+			 num_repeats=4, blend=0.2) #num iterations was 10, repeats was 4   
+	save_image(img_result, "sidelook"+str(i))
 
