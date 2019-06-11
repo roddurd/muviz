@@ -6,7 +6,7 @@ class Vidsplitter:
 	def __init__(self, filename, frameskip = 4):
 		self.video = cv2.VideoCapture(filename)
 		self.factor = frameskip
-	def split():
+	def split(self):
 		try:
 			if not os.path.exists('data'):
 				os.makedirs('data')
