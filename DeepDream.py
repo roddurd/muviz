@@ -228,11 +228,11 @@ images = vidsplit.Vidsplitter("video.mp4")
 images.split()
 print("projdir:", projdir)
 print("datdir:", datadir)
-for subdir, dirs, files in os.walk(datadir):
+for _, _, files in os.walk(datadir):
 	for i, file in enumerate(files):
 		print("file", i, ":", file)
 		image = load_image(filename="data/" + file)
 		layer_tensor = model.layer_tensors[3]
 		img_result = recursive_optimize(layer_tensor=layer_tensor, image=image, num_iterations=10, step_size=3.0, rescale_factor=0.7, num_repeats=4, blend=0.2)
-		save_image(img_result, "slapper"+str(i))
+		save_image(img_result, str(i)+"slapper")
 
