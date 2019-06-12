@@ -219,20 +219,36 @@ def recursive_optimize(layer_tensor, image,
 session = tf.InteractiveSession(graph=model.graph)
 
 
-import vidsplit
+from vidsplit import Vidsplitter
 import os
-projdir = os.path.dirname(os.path.abspath(__file__))
-datadir = os.path.join(projdir, "data")
 
-images = vidsplit.Vidsplitter("video.mp4")
+#Create output dir if it doesn't exist
+try:
+	if not os.path.exists("output"):
+		os.makedirs("output")
+except OSError:
+	print("Error creating directory for output")
+
+proj_dir = os.path.dirname(os.path.abspath(__file__))
+data_dir = os.path.join(proj_dir, "data")
+output_dir = os.path.join(proj_dir, "output")
+
+images = Vidsplitter("video.mp4")
 images.split()
-print("projdir:", projdir)
-print("datdir:", datadir)
-for _, _, files in os.walk(datadir):
-	for i, file in enumerate(files):
-		print("file", i, ":", file)
-		image = load_image(filename="data/" + file)
-		layer_tensor = model.layer_tensors[3]
-		img_result = recursive_optimize(layer_tensor=layer_tensor, image=image, num_iterations=10, step_size=3.0, rescale_factor=0.7, num_repeats=4, blend=0.2)
-		save_image(img_result, str(i)+"slapper")
 
+print("project dir:", proj_dir)
+print("data dir:", data_dir)
+print("output dir:", output_dir)
+
+for _, _, files in os.walk(data_dir):
+	for i, file in enumerate(files):
+		#Process only new files
+		if not os.path.isfile("./output/" + file[0:-9] + "slapper.jpeg"):
+			print("file", i, ":", file)
+			
+			image = load_image(filename="data/" + file)
+			layer_tensor = model.layer_tensors[3]
+			img_result = recursive_optimize(layer_tensor=layer_tensor, image=image, num_iterations=10, step_size=3.0, rescale_factor=0.7, num_repeats=4, blend=0.2)
+			save_image(img_result, "output/"+str(i)+"slapper")
+		else:
+			print("file", i, "already processed")
