@@ -9,6 +9,7 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 import numpy as np
 import random
+import re
 import math
 import PIL.Image
 import inception5h #Thank you Hvass
@@ -213,6 +214,15 @@ def recursive_optimize(layer_tensor, image,
     plot_image(img_result)
     return img_result
 
+#Helper functions for file sorting
+def atoi(text):
+    return int(text) if text.isdigit() else text
+def natural_keys(text):
+    '''
+    alist.sort(key=natural_keys) sorts in human order
+    Otherwise, files are sorted like [1, 11, 2, 22, 3, etc]
+    '''
+    return [ atoi(c) for c in re.split(r'(\d+)', text) ] 
 
 
 #starter code
@@ -241,14 +251,20 @@ print("data dir:", data_dir)
 print("output dir:", output_dir)
 
 for _, _, files in os.walk(data_dir):
+	files.sort(key=natural_keys)
 	for i, file in enumerate(files):
 		#Process only new files
-		if not os.path.isfile("./output/" + file[0:-9] + "slapper.jpeg"):
+		file_name_wo_ext = "./output/" + file[0:-9] + "slapper"
+		if not os.path.isfile(file_name_wo_ext + ".jpeg"):
 			print("file", i, ":", file)
 			
 			image = load_image(filename="data/" + file)
 			layer_tensor = model.layer_tensors[3]
-			img_result = recursive_optimize(layer_tensor=layer_tensor, image=image, num_iterations=10, step_size=3.0, rescale_factor=0.7, num_repeats=4, blend=0.2)
-			save_image(img_result, "output/"+str(i)+"slapper")
+			img_result = recursive_optimize(layer_tensor=layer_tensor, image=image, num_iterations=10, step_size=3.0, rescale_factor=0.7, num_repeats=2, blend=0.2)
+			save_image(img_result, file_name_wo_ext)
+			try:
+				os.remove(file_name_wo_ext)
+			except OSError:
+				print("Error removing", file_name_wo_ext,"which is a useless empty file")
 		else:
-			print("file", i, "already processed")
+			print("file", i, "already processed", "({})".format(file))
