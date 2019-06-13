@@ -10,7 +10,7 @@ class Vidsplicer:
 		video = cv2.VideoWriter('video.avi', cv2.VideoWriter_fourcc(*'DIVX'), 6, (width, height))
 		for _, _, files in os.walk(self.directory):
 			for file in files:	
-				image = cv2.imread(file)
+				image = cv2.imread("output/" + file)
 				video.write(image)	
 		cv2.destroyAllWindows()
 		video.release()
