@@ -250,6 +250,11 @@ print("project dir:", proj_dir)
 print("data dir:", data_dir)
 print("output dir:", output_dir)
 
+from vidsplice import Vidsplicer
+
+video = Vidsplicer(output_dir)
+video.join()
+		
 for _, _, files in os.walk(data_dir):
 	files.sort(key=natural_keys)
 	for i, file in enumerate(files):
