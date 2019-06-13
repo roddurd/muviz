@@ -1,5 +1,4 @@
 import cv2
-import numpy as np
 import os
 
 class Vidsplitter:
@@ -12,7 +11,7 @@ class Vidsplitter:
 				os.makedirs('data')
 		except OSError:
 			print('Error creating directory of data')
-
+		#TODO: check if last frame file exists to save computation?
 		success, frame = self.video.read()
 		currentFrame = 0
 		while (success):

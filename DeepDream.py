@@ -1,10 +1,3 @@
-
-# coding: utf-8
-
-# In[1]:
-
-
-#Dependencies
 import matplotlib.pyplot as plt
 import tensorflow as tf
 import numpy as np
@@ -167,16 +160,10 @@ def optimize_image(layer_tensor, image,
     return img
 
 
-# In[6]:
-
-
 def recursive_optimize(layer_tensor, image,
                        num_repeats=4, rescale_factor=0.7, blend=0.2,
                        num_iterations=10, step_size=3.0,
                        tile_size=400):
-#THANK YOU HVASS!!! 
-
-    # Do a recursive step?
     if num_repeats>0:
         # Blur the input image to prevent artifacts when downscaling.
         # The blur amount is controlled by sigma. Note that the
@@ -224,12 +211,11 @@ def natural_keys(text):
     '''
     return [ atoi(c) for c in re.split(r'(\d+)', text) ] 
 
-
 #starter code
 session = tf.InteractiveSession(graph=model.graph)
 
-
 from vidsplit import Vidsplitter
+from vidsplice import Vidsplicer
 import os
 
 #Create output dir if it doesn't exist
@@ -243,33 +229,35 @@ proj_dir = os.path.dirname(os.path.abspath(__file__))
 data_dir = os.path.join(proj_dir, "data")
 output_dir = os.path.join(proj_dir, "output")
 
-images = Vidsplitter("video.mp4")
-images.split()
-
 print("project dir:", proj_dir)
 print("data dir:", data_dir)
 print("output dir:", output_dir)
 
-from vidsplice import Vidsplicer
-
-video = Vidsplicer(output_dir)
-video.join()
-		
+#create a dir /data/ where the video is unpacked into images
+images = Vidsplitter("video.mp4")
+images.split()
+	
 for _, _, files in os.walk(data_dir):
 	files.sort(key=natural_keys)
 	for i, file in enumerate(files):
-		#Process only new files
-		file_name_wo_ext = "./output/" + file[0:-9] + "slapper"
-		if not os.path.isfile(file_name_wo_ext + ".jpeg"):
+		#Process only new images
+		#filename_wo_ext : filename without extension
+		filename_wo_ext = "./output/" + file[0:-9] + "slapper"
+		if not os.path.isfile(filename_wo_ext + ".jpeg"):
 			print("file", i, ":", file)
 			
 			image = load_image(filename="data/" + file)
 			layer_tensor = model.layer_tensors[3]
 			img_result = recursive_optimize(layer_tensor=layer_tensor, image=image, num_iterations=10, step_size=3.0, rescale_factor=0.7, num_repeats=2, blend=0.2)
-			save_image(img_result, file_name_wo_ext)
+			save_image(img_result, filename_wo_ext)
 			try:
-				os.remove(file_name_wo_ext)
+				os.remove(filename_wo_ext)
 			except OSError:
-				print("Error removing", file_name_wo_ext,"which is a useless empty file")
+				print("Error removing", filename_wo_ext,"which is a useless empty file")
 		else:
 			print("file", i, "already processed", "({})".format(file))
+
+#Splice the dreamy images into a video
+video = Vidsplicer(output_dir)
+video.join()
+	
