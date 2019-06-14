@@ -4,13 +4,13 @@ import numpy as np
 img = cv2.imread("pfp3.jpg")
 height, width, _ = img.shape
 
+
+
 #img zoom (warpPerspective)
-pts1 = np.float32([[20, 20],[width-20, 20], [20, height-20],[width-20, height-20]])
-pts2 = np.float32([[0, 0],  [width, 0], [0, height],[width, height]])
-M = cv2.getPerspectiveTransform(pts1, pts2)
-
-zimg = cv2.warpPerspective(img, M, (width, height))
-
+def warp(img, pts1, pts2):
+	M = cv2.getPerspectiveTransform(pts1, pts2)
+	zimg = cv2.warpPerspective(img, M, (width, height))
+	return zimg
 
 #red,blue, green -scale
 def color(img, color):
@@ -21,7 +21,7 @@ def color(img, color):
 	red_img[:, :, index] = gray_img
 	return red_img
 
-blue = color(img, 'blue')
+blue = color(img, 'green')
 cv2.imshow('blue', blue)
 cv2.waitKey(0)
 
