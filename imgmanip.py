@@ -2,7 +2,6 @@ import cv2
 import os
 import numpy as np
 img = cv2.imread("pfp3.jpg")
-height, width, _ = img.shape
 
 
 
@@ -17,6 +16,7 @@ def zoom_corners(img, percent_zoom):
 	zoom_corners = [corner*(1 + percent_zoom) for corner in cnrs]
 	return zoom_corners	
 def warp(img, pts1, pts2):
+	height, width, _ = img.shape
 	pts1, pts2 = map(np.float32, (pts1, pts2))
 	M = cv2.getPerspectiveTransform(pts1, pts2)
 	zimg = cv2.warpPerspective(img, M, (width, height))
@@ -35,7 +35,7 @@ def color(img, color):
 	red_img[:, :, index] = gray_img
 	return red_img
 
-img_zoom = zoom(img, 100)
+img_zoom = zoom(img, 50)
 cv2.imshow('zoom', img_zoom)
 cv2.waitKey(0)
 
