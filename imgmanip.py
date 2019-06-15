@@ -21,6 +21,10 @@ def warp(img, pts1, pts2):
 	M = cv2.getPerspectiveTransform(pts1, pts2)
 	zimg = cv2.warpPerspective(img, M, (width, height))
 	return zimg
+def zoom(img, percent_zoom):
+	cnrs = corners(img)
+	zoom_cnrs = zoom_corners(img, percent_zoom)
+	return warp(img, cnrs, zoom_cnrs)
 
 #red,blue, green -scale
 def color(img, color):
@@ -31,9 +35,7 @@ def color(img, color):
 	red_img[:, :, index] = gray_img
 	return red_img
 
-pts1 = corners(img)
-pts2 = zoom_corners(img, 100)
-img_zoom = warp(img, pts1, pts2)
+img_zoom = zoom(img, 100)
 cv2.imshow('zoom', img_zoom)
 cv2.waitKey(0)
 
