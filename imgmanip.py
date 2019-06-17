@@ -266,7 +266,7 @@ def tesselate(img, center, radius):
 	for i in range(-radius, radius):
 		for j in range(-radius, radius):
 			for k in range(5):
-				img[center[0]+k*radius+i][center[1]+k*radius+j]=img[center[0]+i][center[1]+j]
+				img[center[0]+radius+i][center[1]+k*radius+j]=img[center[0]-radius+i][center[1]-radius+j]
 	return img	
 				
 
@@ -289,7 +289,7 @@ proj_dir = os.path.dirname(os.path.abspath(__file__))
 data_dir = os.path.join(proj_dir, "data")
 output_dir = os.path.join(proj_dir, "output")
 
-timg = tesselate(img, (100, 400), 50)
+timg = tesselate(img, (200, 550), 50)
 cv2.imshow('timg', timg)
 cv2.waitKey(0)
 """
