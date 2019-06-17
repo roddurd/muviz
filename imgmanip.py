@@ -268,7 +268,15 @@ def tesselate(img, center, radius):
 			for k in range(5):
 				img[center[0]+radius+i][center[1]+k*radius+j]=img[center[0]-radius+i][center[1]-radius+j]
 	return img	
-				
+def circle(img, center, radius, color='random',thickness=5,alpha=1):
+	img_copy = img.copy()
+	if color=='random':
+		clr = random.choice(list(colors.values()))
+	else:
+		clr = color
+	cv2.circle(img_copy, center, radius, clr,thickness) 
+	cv2.addWeighted(img_copy,alpha,img,1-alpha,0,img)
+	return img
 
 
 #for file sorting
@@ -289,8 +297,8 @@ proj_dir = os.path.dirname(os.path.abspath(__file__))
 data_dir = os.path.join(proj_dir, "data")
 output_dir = os.path.join(proj_dir, "output")
 
-timg = tesselate(img, (200, 550), 50)
-cv2.imshow('timg', timg)
+circle(img, (200, 400), 100, 'random', -1,0.4) 
+cv2.imshow('timg', img)
 cv2.waitKey(0)
 """
 for _, _, files in os.walk(output_dir):
