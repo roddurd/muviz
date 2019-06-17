@@ -240,6 +240,7 @@ def color(img, color):
 
 #img fracture effect
 def fracture(img):
+	"""adds a slightly transparent set of polygons which all connect to the center, and each have a different color"""
 	red=(0,0,255)
 	green=(0,255,0)
 	blue=(255,0,0)
@@ -261,7 +262,13 @@ def fracture(img):
 		cv2.fillPoly(imgcopy, np.int32([polygon]),clr) 	
 	alpha = 0.5
 	cv2.addWeighted(imgcopy, alpha, img, 1-alpha, 0, img)	
-			
+def tesselate(img, center, radius):
+	for i in range(-radius, radius):
+		for j in range(-radius, radius):
+			for k in range(5):
+				img[center[0]+k*radius+i][center[1]+k*radius+j]=img[center[0]+i][center[1]+j]
+	return img	
+				
 
 
 #for file sorting
@@ -282,6 +289,10 @@ proj_dir = os.path.dirname(os.path.abspath(__file__))
 data_dir = os.path.join(proj_dir, "data")
 output_dir = os.path.join(proj_dir, "output")
 
+timg = tesselate(img, (100, 400), 50)
+cv2.imshow('timg', timg)
+cv2.waitKey(0)
+"""
 for _, _, files in os.walk(output_dir):
 	files.sort(key=natural_keys)
 	for i, file in enumerate(files):
@@ -290,7 +301,6 @@ for _, _, files in os.walk(output_dir):
 			imgo = cv2.imread("output/"+file)
 			fracture(imgo)
 			cv2.imwrite("output/"+file,imgo)
-"""
 from vidsplice import Vidsplicer
 
 vid = Vidsplicer(output_dir)
