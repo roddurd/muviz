@@ -61,10 +61,10 @@ def fracture(img):
 		top=[random.randint(20,width-20),0]#top
 		right=[width,random.randint(20,height-20)]#right
 		bottom=[random.randint(20,width-20),height]#bottom
-		polygons.append([left,top,center,[0,0]])
-		polygons.append([left,bottom,center,[0,height]])
-		polygons.append([right,top,center,[width,0]])
-		polygons.append([right,bottom,center,[width,height]])
+		polygons.append([left,center,top,[0,0]])
+		polygons.append([left,center,bottom,[0,height]])
+		polygons.append([right,center,top,[width,0]])
+		polygons.append([right,center,bottom,[width,height]])
 	for polygon in polygons:
 		clr = random.choice([red, green, blue])
 		cv2.fillPoly(img, np.int32([polygon]),clr) 	
@@ -73,10 +73,7 @@ def fracture(img):
 
 #for file sorting
 def atoi(text):
-	try:
-		return int(text)
-	except:
-		return text
+	return int(text) if text.isdigit() else text
 def natural_keys(text):
     '''
     alist.sort(key=natural_keys) sorts in human order

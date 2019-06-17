@@ -8,11 +8,12 @@ import PIL.Image
 import inception5h #Thank you Hvass
 from scipy.ndimage.filters import gaussian_filter
 from IPython.display import Image, display
-
+from vidsplit import Vidsplitter
+from vidsplice import Vidsplicer
+import os
 
 inception5h.maybe_download()
 model = inception5h.Inception5h()
-
 
 def load_image(filename):
     image = PIL.Image.open(filename)
@@ -212,52 +213,50 @@ def natural_keys(text):
     return [ atoi(c) for c in re.split(r'(\d+)', text) ] 
 
 #starter code
-session = tf.InteractiveSession(graph=model.graph)
+def run():
+	session = tf.InteractiveSession(graph=model.graph)
 
-from vidsplit import Vidsplitter
-from vidsplice import Vidsplicer
-import os
+		#Create output dir if it doesn't exist
+	try:
+		if not os.path.exists("output"):
+			os.makedirs("output")
+	except OSError:
+		print("Error creating directory for output")
 
-#Create output dir if it doesn't exist
-try:
-	if not os.path.exists("output"):
-		os.makedirs("output")
-except OSError:
-	print("Error creating directory for output")
 
-proj_dir = os.path.dirname(os.path.abspath(__file__))
-data_dir = os.path.join(proj_dir, "data")
-output_dir = os.path.join(proj_dir, "output")
+	proj_dir = os.path.dirname(os.path.abspath(__file__))
+	data_dir = os.path.join(proj_dir, "data")
+	output_dir = os.path.join(proj_dir, "output")
 
-print("project dir:", proj_dir)
-print("data dir:", data_dir)
-print("output dir:", output_dir)
+	print("project dir:", proj_dir)
+	print("data dir:", data_dir)
+	print("output dir:", output_dir)
 
-#create a dir /data/ where the video is unpacked into images
-images = Vidsplitter("video.mp4")
-images.split()
-	
-for _, _, files in os.walk(data_dir):
-	files.sort(key=natural_keys)
-	for i, file in enumerate(files):
-		#Process only new images
-		#filename_wo_ext : filename without extension
-		filename_wo_ext = "./output/" + file[0:-9] + "slapper"
-		if not os.path.isfile(filename_wo_ext + ".jpeg"):
-			print("file", i, ":", file)
-			
-			image = load_image(filename="data/" + file)
-			layer_tensor = model.layer_tensors[3]
-			img_result = recursive_optimize(layer_tensor=layer_tensor, image=image, num_iterations=10, step_size=3.0, rescale_factor=0.7, num_repeats=2, blend=0.2)
-			save_image(img_result, filename_wo_ext)
-			try:
-				os.remove(filename_wo_ext)
-			except OSError:
-				print("Error removing", filename_wo_ext,"which is a useless empty file")
-		else:
-			print("file", i, "already processed", "({})".format(file))
+	#create a dir /data/ where the video is unpacked into images
+	images = Vidsplitter("video.mp4")
+	images.split()
+		
+	for _, _, files in os.walk(data_dir):
+		files.sort(key=natural_keys)
+		for i, file in enumerate(files):
+			#Process only new images
+			#filename_wo_ext : filename without extension
+			filename_wo_ext = "./output/" + file[0:-9] + "slapper"
+			if not os.path.isfile(filename_wo_ext + ".jpeg"):
+				print("file", i, ":", file)
+				
+				image = load_image(filename="data/" + file)
+				layer_tensor = model.layer_tensors[3]
+				img_result = recursive_optimize(layer_tensor=layer_tensor, image=image, num_iterations=10, step_size=3.0, rescale_factor=0.7, num_repeats=2, blend=0.2)
+				save_image(img_result, filename_wo_ext)
+				try:
+					os.remove(filename_wo_ext)
+				except OSError:
+					print("Error removing", filename_wo_ext,"which is a useless empty file")
+			else:
+				print("file", i, "already processed", "({})".format(file))
 
-#Splice the dreamy images into a video
-video = Vidsplicer(output_dir)
-video.join()
+	#Splice the dreamy images into a video
+	video = Vidsplicer(output_dir)
+	video.join()
 	
