@@ -255,9 +255,12 @@ def fracture(img):
 		polygons.append([left,center,bottom,[0,height]])
 		polygons.append([right,center,top,[width,0]])
 		polygons.append([right,center,bottom,[width,height]])
+	imgcopy = img.copy()
 	for polygon in polygons:
 		clr = random.choice(list(colors.values()))
-		cv2.fillPoly(img, np.int32([polygon]),clr) 	
+		cv2.fillPoly(imgcopy, np.int32([polygon]),clr) 	
+	alpha = 0.5
+	cv2.addWeighted(imgcopy, alpha, img, 1-alpha, 0, img)	
 			
 
 
