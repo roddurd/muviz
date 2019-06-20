@@ -277,7 +277,9 @@ def circle(img, center, radius, color='random',thickness=5,alpha=1):
 	cv2.circle(img_copy, center, radius, clr,thickness) 
 	cv2.addWeighted(img_copy,alpha,img,1-alpha,0,img)
 	return img
-
+def blur(img, intensity):
+	intensity += 1 if not intensity%2 else 0
+	cv2.GaussianBlur(img, (intensity, intensity), 3, img)
 
 #for file sorting
 def atoi(text):
@@ -298,6 +300,7 @@ data_dir = os.path.join(proj_dir, "data")
 output_dir = os.path.join(proj_dir, "output")
 
 circle(img, (200, 400), 100, 'random', -1,0.4) 
+blur(img, 10)
 cv2.imshow('timg', img)
 cv2.waitKey(0)
 """
