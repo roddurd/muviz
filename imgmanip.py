@@ -280,6 +280,13 @@ def circle(img, center, radius, color='random',thickness=5,alpha=1):
 def blur(img, intensity):
 	intensity += 1 if not intensity%2 else 0
 	cv2.GaussianBlur(img, (intensity, intensity), 3, img)
+	return img
+def rotate(img, theta):
+	height, width, _ = img.shape
+	M = cv2.getRotationMatrix2D((width/2, height/2), theta,1)
+	img = cv2.warpAffine(img, M, (width, height))
+	return img	
+
 
 #for file sorting
 def atoi(text):
@@ -299,10 +306,12 @@ proj_dir = os.path.dirname(os.path.abspath(__file__))
 data_dir = os.path.join(proj_dir, "data")
 output_dir = os.path.join(proj_dir, "output")
 
-circle(img, (200, 400), 100, 'random', -1,0.4) 
-blur(img, 10)
+img = circle(img, (200, 400), 100, 'random', -1,0.4) 
+img = blur(img, 10)
+img = rotate(img, 45)
 cv2.imshow('timg', img)
 cv2.waitKey(0)
+
 """
 for _, _, files in os.walk(output_dir):
 	files.sort(key=natural_keys)
