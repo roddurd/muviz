@@ -323,7 +323,7 @@ for _, _, files in os.walk(output_dir):
 			cv2.imwrite("output/"+file,imgo)
 from vidsplice import Vidsplicer
 
-vid = Vidsplicer(output_dir)
+vid = Vidsplicer(output_dir, fps=6)
 vid.join()					
 
 img_zoom = zoom(img, 40)
