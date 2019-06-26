@@ -197,6 +197,28 @@ colors = {
 "WHITESMOKE" : (245, 245, 245),
 "YELLOW1" : (255, 255, 0)}
 
+def blur(img, intensity):
+        img = img.copy()
+        intensity += 1 if not intensity%2 else 0
+        cv2.GaussianBlur(img, (intensity, intensity), 3, img)
+        return img
+def rotate(img, theta):
+        img = img.copy()
+        height, width, _ = img.shape
+        M = cv2.getRotationMatrix2D((width/2, height/2), theta,1)
+        img = cv2.warpAffine(img, M, (width, height))
+        return img      
+
+#red,blue, green -scale
+def color(img, color):
+        """returns img in red-, green-, or blue-scale depending on if color is 'red', 'blue', or 'green'"""
+        colors = {"blue":0, "green":1, "red":2}
+        index = colors.get(color)
+        gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        clr_img = np.zeros_like(img)
+        clr_img[:, :, index] = gray_img
+        return clr_img
+
 #img zoom (warpPerspective)
 def corners(img):
         height, width, _ = img.shape
@@ -228,16 +250,6 @@ def zoom(img, percent_zoom):
         zoom_cnrs = zoom_corners(img, percent_zoom)
         return warp(img, cnrs, zoom_cnrs)
 
-#red,blue, green -scale
-def color(img, color):
-        """returns img in red-, green-, or blue-scale depending on if color is 'red', 'blue', or 'green'"""
-        colors = {"blue":0, "green":1, "red":2}
-        index = colors.get(color)
-        gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        red_img = np.zeros_like(img)
-        red_img[:, :, index] = gray_img
-        return red_img
-
 #img fracture effect
 def fracture(img):
         """adds a slightly transparent set of polygons which all connect to the center, and each have a different color"""
@@ -264,13 +276,7 @@ def fracture(img):
         alpha = 0.5
         cv2.addWeighted(imgcopy, alpha, img, 1-alpha, 0, img)   
         return img
-def tesselate(img, center, radius):
-        img = img.copy()
-        for i in range(-radius, radius):
-                for j in range(-radius, radius):
-                        for k in range(5):
-                                img[center[0]+radius+i][center[1]+k*radius+j]=img[center[0]-radius+i][center[1]-radius+j]
-        return img      
+
 def circle(img, center, radius, color='random',thickness=5,alpha=1):
         img = img.copy()
         img_copy = img.copy() #second copy for adding weighted onto img; for transparency
@@ -281,25 +287,29 @@ def circle(img, center, radius, color='random',thickness=5,alpha=1):
         cv2.circle(img_copy, center, radius, clr,thickness) 
         cv2.addWeighted(img_copy,alpha,img,1-alpha,0,img)
         return img
-def blur(img, intensity):
+
+def tesselate(img, center, radius):
         img = img.copy()
-        intensity += 1 if not intensity%2 else 0
-        cv2.GaussianBlur(img, (intensity, intensity), 3, img)
-        return img
-def rotate(img, theta):
-        img = img.copy()
-        height, width, _ = img.shape
-        M = cv2.getRotationMatrix2D((width/2, height/2), theta,1)
-        img = cv2.warpAffine(img, M, (width, height))
+        for i in range(-radius, radius):
+                for j in range(-radius, radius):
+                        for k in range(5):
+                                img[center[0]+radius+i][center[1]+k*radius+j]=img[center[0]-radius+i][center[1]-radius+j]
         return img      
 
+def faded(img):
+	img = img.copy()
+	img2 = img.copy()
+	img2 = zoom(img2, 20)
+	alpha = 0.4
+	cv2.addWeighted(img2, alpha, img, 1-alpha, 0, img)
+	return img
 
 #for file sorting
 def atoi(text):
         return int(text) if text.isdigit() else text
 def natural_keys(text):
     '''
-    alist.sort(key=natural_keys) sorts in human order
+    alist.sort(key=natural_keys) sorts in numerical order
     Otherwise, files are sorted like [1, 11, 2, 22, 3, etc]
     '''
     return [ atoi(c) for c in re.split(r'(\d+)', text) ] 
@@ -312,10 +322,7 @@ proj_dir = os.path.dirname(os.path.abspath(__file__))
 data_dir = os.path.join(proj_dir, "data")
 output_dir = os.path.join(proj_dir, "output")
 
-img = color(img, 'red')
-img = circle(img, (200, 400), 100, 'random', -1,0.4) 
-img = blur(img, 10)
-img = rotate(img, 45)
+img = faded(img)
 cv2.imshow('timg', img)
 cv2.waitKey(0)
 
