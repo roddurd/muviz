@@ -197,6 +197,18 @@ colors = {
 "WHITESMOKE" : (245, 245, 245),
 "YELLOW1" : (255, 255, 0)}
 
+def blur(img, intensity):
+	img = img.copy()
+	intensity += 1 if not intensity%2 else 0
+	cv2.GaussianBlur(img, (intensity, intensity), 3, img)
+	return img
+def rotate(img, theta):
+	img = img.copy()
+	height, width, _ = img.shape
+	M = cv2.getRotationMatrix2D((width/2, height/2), theta,1)
+	img = cv2.warpAffine(img, M, (width, height))
+	return img	
+
 #img zoom (warpPerspective)
 def corners(img):
 	height, width, _ = img.shape
@@ -238,6 +250,21 @@ def color(img, color):
 	red_img[:, :, index] = gray_img
 	return red_img
 
+def tesselate(img, center, radius):
+	for i in range(-radius, radius):
+		for j in range(-radius, radius):
+			for k in range(5):
+				img[center[0]+radius+i][center[1]+k*radius+j]=img[center[0]-radius+i][center[1]-radius+j]
+	return img	
+def circle(img, center, radius, color='random',thickness=5,alpha=1):
+	img_copy = img.copy()
+	if color=='random':
+		clr = random.choice(list(colors.values()))
+	else:
+		clr = color
+	cv2.circle(img_copy, center, radius, clr,thickness) 
+	cv2.addWeighted(img_copy,alpha,img,1-alpha,0,img)
+	return img
 #img fracture effect
 def fracture(img):
 	"""adds a slightly transparent set of polygons which all connect to the center, and each have a different color"""
@@ -262,32 +289,13 @@ def fracture(img):
 		cv2.fillPoly(imgcopy, np.int32([polygon]),clr) 	
 	alpha = 0.5
 	cv2.addWeighted(imgcopy, alpha, img, 1-alpha, 0, img)	
-def tesselate(img, center, radius):
-	for i in range(-radius, radius):
-		for j in range(-radius, radius):
-			for k in range(5):
-				img[center[0]+radius+i][center[1]+k*radius+j]=img[center[0]-radius+i][center[1]-radius+j]
-	return img	
-def circle(img, center, radius, color='random',thickness=5,alpha=1):
-	img_copy = img.copy()
-	if color=='random':
-		clr = random.choice(list(colors.values()))
-	else:
-		clr = color
-	cv2.circle(img_copy, center, radius, clr,thickness) 
-	cv2.addWeighted(img_copy,alpha,img,1-alpha,0,img)
-	return img
-def blur(img, intensity):
-	intensity += 1 if not intensity%2 else 0
-	cv2.GaussianBlur(img, (intensity, intensity), 3, img)
-	return img
-def rotate(img, theta):
-	height, width, _ = img.shape
-	M = cv2.getRotationMatrix2D((width/2, height/2), theta,1)
-	img = cv2.warpAffine(img, M, (width, height))
-	return img	
 
-
+def faded(img):
+	img = img.copy()
+	img2 = img.copy()
+	img2 = zoom(img2, 20)
+	cv2.addWeighted(img2, 0.4, img, 1-0.4, 0, img) 
+	return img
 #for file sorting
 def atoi(text):
 	return int(text) if text.isdigit() else text
@@ -306,9 +314,7 @@ proj_dir = os.path.dirname(os.path.abspath(__file__))
 data_dir = os.path.join(proj_dir, "data")
 output_dir = os.path.join(proj_dir, "output")
 
-img = circle(img, (200, 400), 100, 'random', -1,0.4) 
-img = blur(img, 10)
-img = rotate(img, 45)
+img = faded(img)
 cv2.imshow('timg', img)
 cv2.waitKey(0)
 
