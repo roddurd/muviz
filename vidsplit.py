@@ -9,15 +9,17 @@ class Vidsplitter:
 		try:
 			if not os.path.exists('data'):
 				os.makedirs('data')
+			if not os.path.exists('output'):
+				os.makedirs('output')
 		except OSError:
 			print('Error creating directory of data')
 		#TODO: check if last frame file exists to save computation?
-		success, frame = self.video.read()
+		success = True
 		currentFrame = 0
 		while (success):
 			success, frame = self.video.read()
 			name = './data/' + str(currentFrame) + 'frame.jpg'
-			if not os.path.isfile(name) and currentFrame % self.factor == 0:
+			if success and not os.path.isfile(name) and currentFrame % self.factor == 0:
 
 				print('Creating...' + name)
 				cv2.imwrite(name, frame)

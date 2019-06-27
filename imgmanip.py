@@ -212,6 +212,9 @@ def rotate(img, theta):
 #red,blue, green -scale
 def color(img, color):
     colors = {"blue":0, "green":1, "red":2}
+    if color == 'random':
+        color = random.choice(list(colors.keys()))
+        print("color: ", color)
     index = colors.get(color)
     gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     clr_img = np.zeros_like(img)
@@ -268,7 +271,6 @@ def fracture(img):
         polygons.append([left,center,bottom,[0,height]])
         polygons.append([right,center,top,[width,0]])
         polygons.append([right,center,bottom,[width,height]])
-        imgcopy = img.copy()
     for polygon in polygons:
         clr = random.choice(list(colors.values()))
         cv2.fillPoly(imgcopy, np.int32([polygon]),clr)  
@@ -315,45 +317,33 @@ def natural_keys(text):
 
 
 #test/starter code
-beat_skip = 4
 
 proj_dir = os.path.dirname(os.path.abspath(__file__))
 data_dir = os.path.join(proj_dir, "data")
 output_dir = os.path.join(proj_dir, "output")
-
-"""
 from vidsplit import Vidsplitter
-vid = Vidsplitter("parrot.mp4")
+vid = Vidsplitter("parrot.mp4", 1)
 vid.split()
-
 for _, _, files in os.walk(data_dir):
     files.sort(key=natural_keys)
     counter = 0
+    skip = 20
     for i, file in enumerate(files):
+        if not i%skip:
+            img = cv2.imread("data/" + file)
+            img = color(img, 'random')
+            cv2.imwrite("data/" + file, img)
         if counter < 50:
-            counter += 5
+            counter += 3
             img = cv2.imread("data/" + file)
             img = faded(img, counter)
             cv2.imwrite("output/" + file, img)
-        if counter == 50:
+        if counter >= 50:
             counter = 0
-"""
-
 from vidsplice import Vidsplicer
 
-vid = Vidsplicer(output_dir, fps=6)
+vid = Vidsplicer(output_dir, fps=24)
 vid.join()                                      
-
-
-
-
-
-
-
-
-
-
-
 
 
 
