@@ -3,7 +3,7 @@ import os
 import numpy as np
 import re
 import random
-img = cv2.imread("parrot.jpg")
+img = cv2.imread("pfp3.jpg")
 
 
 colors = {
@@ -297,6 +297,18 @@ def tesselate(img, center, radius):
                 img[center[0]+radius+i][center[1]+k*radius+j]=img[center[0]-radius+i][center[1]-radius+j]
                 return img      
 
+def increase_brightness(img, value=30):
+    hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+    h, s, v = cv2.split(hsv)
+
+    lim = 255 - value
+    v[v > lim] = 255
+    v[v <= lim] += value
+
+    final_hsv = cv2.merge((h, s, v))
+    img = cv2.cvtColor(final_hsv, cv2.COLOR_HSV2BGR)
+    return img
+
 def faded(img,percent_zoom):
     img = img.copy()
     img2 = img.copy()
@@ -321,6 +333,10 @@ def natural_keys(text):
 proj_dir = os.path.dirname(os.path.abspath(__file__))
 data_dir = os.path.join(proj_dir, "data")
 output_dir = os.path.join(proj_dir, "output")
+img = increase_brightness(img)
+cv2.imshow('img', img)
+cv2.waitKey(0)
+"""
 from vidsplit import Vidsplitter
 vid = Vidsplitter("parrot.mp4", 1)
 vid.split()
@@ -345,9 +361,7 @@ from vidsplice import Vidsplicer
 vid = Vidsplicer(output_dir, fps=24)
 vid.join()                                      
 
-
-
-
+"""
 
 
 
