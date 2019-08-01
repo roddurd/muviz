@@ -336,8 +336,7 @@ def horizontal_glitch(img, bands):
         if i-50 < 0:
             img[5:50,i] = img[5:50,i+50]
         else:
-            img[90:100,i] = img[90:100,i-50]
-        #    img[5:10][i][:] = img[5:10][i-50][:] 
+            img[90:95,i-50] = img[90:95,i]
     return img
 #for file sorting
 def atoi(text):
