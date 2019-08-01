@@ -328,9 +328,20 @@ def faded(img,percent_zoom):
     cv2.addWeighted(img2, alpha, img, 1-alpha, 0, img)
     return img
 
+def horizontal_glitch(img, bands):
+    img = img.copy()
+    height, width, _ = img.shape
+    print("height:", height, "width:", width)
+    for i in range(width):
+        if i-50 < 0:
+            img[5:50,i] = img[5:50,i+50]
+        else:
+            img[90:100,i] = img[90:100,i-50]
+        #    img[5:10][i][:] = img[5:10][i-50][:] 
+    return img
 #for file sorting
 def atoi(text):
-    return int(text) if text.isdigit() else text
+    return int(text) if text.isdigit() else False
 def natural_keys(text):
     '''
     alist.sort(key=natural_keys) sorts in numerical order
@@ -345,11 +356,8 @@ proj_dir = os.path.dirname(os.path.abspath(__file__))
 data_dir = os.path.join(proj_dir, "data")
 output_dir = os.path.join(proj_dir, "output")
 
-
-bright = brighten(img,20)
-dark = darken(img,20)
-cv2.imshow('bright', bright)
-cv2.imshow('dark', dark)
+glitch = horizontal_glitch(img, 10)
+cv2.imshow('glitch', glitch)
 cv2.waitKey(0)
 """
 from vidsplit import Vidsplitter
