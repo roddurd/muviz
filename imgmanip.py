@@ -332,11 +332,14 @@ def horizontal_glitch(img, bands):
     img = img.copy()
     height, width, _ = img.shape
     print("height:", height, "width:", width)
-    for i in range(width):
-        if i-50 < 0:
-            img[5:50,i] = img[5:50,i+50]
-        else:
-            img[90:95,i-50] = img[90:95,i]
+    xcoords = [random.randint(20,height-20) for _ in range(bands)]
+    for x in xcoords:
+        for i in range(width):
+            if i-50 < 0:
+                img[x:x+10,i] = img[x:x+10,i+50]
+            else:
+                img[x:x+10,i-50] = img[x:x+10,i]
+                img[x:x+10,i] = img[x:x+10,width-i]
     return img
 #for file sorting
 def atoi(text):
