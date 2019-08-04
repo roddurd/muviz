@@ -328,18 +328,22 @@ def faded(img,percent_zoom):
     cv2.addWeighted(img2, alpha, img, 1-alpha, 0, img)
     return img
 
-def horizontal_glitch(img, bands):
+def horizontal_glitch(img, bands, coords=None):
+#xcoords for the glitch bands can be passed, so that subsequent glitches are nearby.
     img = img.copy()
     height, width, _ = img.shape
-    xcoords = [random.randint(20,height-20) for _ in range(bands)]
-    for x in xcoords:
+    if coords:
+        coords = [x+5 if x+5< height else round(x-(height/2)) for x in coords]
+    else:
+        coords = [random.randint(20,height-20) for _ in range(bands)]
+    for x in coords:
         for i in range(width):
             if i-50 < 0:
                 img[x:x+10,i] = img[x:x+10,i+50]
             else:
                 img[x:x+10,i-50] = img[x:x+10,i]
                 img[x:x+10,i] = img[x:x+10,width-i]
-    return img
+    return img, xcoords
 #for file sorting
 def atoi(text):
     return int(text) if text.isdigit() else False
@@ -350,32 +354,34 @@ def natural_keys(text):
     '''
     return [ atoi(c) for c in re.split(r'(\d+)', text) ] 
 
-
 #test/starter code
 
 proj_dir = os.path.dirname(os.path.abspath(__file__))
 data_dir = os.path.join(proj_dir, "data")
 output_dir = os.path.join(proj_dir, "output")
 
-
-
-
-"""
 from vidsplit import Vidsplitter
-vid = Vidsplitter("parrot.mp4", 1)
-vid.split()"""
+vid = Vidsplitter("video.mp4", 1)
+vid.split()
+
 for _, _, files in os.walk(data_dir):
     files.sort(key=natural_keys)
     skip = 1
+    coords = []
     for i, file in enumerate(files):
+      
+        if i==0:
+            img = cv2.imread('data/' + file)
+            img, coords = horizontal_glitch(img,5)
         if not i%skip:
             img = cv2.imread("data/" + file)
-            img = horizontal_glitch(img,10)
+            img, coords = horizontal_glitch(img,5,coords)
             cv2.imwrite("data/" + file, img)
 from vidsplice import Vidsplicer
 
 vid = Vidsplicer(data_dir, fps=24)
 vid.join()                                      
+print("joined")
 
 
 
