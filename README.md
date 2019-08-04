@@ -6,10 +6,10 @@ For now, it's just a CLI for testing my image/video manipulation libraries.
 
 # Features
 - <b>DeepDream for video</b>: pretty much just a clone of Hvass Lab's DeepDream code, connected to two video <-> frame images conversion libraries I wrote.
-
--<b>Horizontal glitch effect</b>: Ya the title pretty much says it. I just shift random rows of pixels by 50.
-
--<b>Faded effect</b>: Kind of like seeing double, but its like quadruple and the duplicate images are just slightly transparent and incrementally zoomed in versions of the frame.
+![](deepdream gif.gif)
+- <b>Horizontal glitch effect</b>: Ya the title pretty much says it. I just shift random rows of pixels by 50.
+![](hor glitch gif.gif)
+- <b>Faded effect</b>: Kind of like seeing double, but its like quadruple and the duplicate images are just slightly transparent and incrementally zoomed in versions of the frame.
 
 - Ya that's kind of it rn. I had another function that draws random fractures on the screen but its kinda boring. And some very basic img manipulation functions like zooming from center, opacity, brighten/darken, grey/R/G/B-scale, etc.
 
