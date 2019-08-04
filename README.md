@@ -12,7 +12,7 @@ For now, it's just a CLI for testing my image/video manipulation libraries.
 - <b>Horizontal glitch effect</b>: Ya the title pretty much says it. I just shift random rows of pixels by 50.
 
 
-![Horizontal glitch effect](glitch.gif)
+![Horizontal glitch effect](glitched.gif)
 
 - <b>Faded effect</b>: Kind of like seeing double, but its like quadruple and the duplicate images are just slightly transparent and incrementally zoomed in versions of the frame.
 
