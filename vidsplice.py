@@ -13,13 +13,13 @@ class Vidsplicer:
 		self.directory = dir
 		self.FPS = fps
 	def join(self):
-		sample_img = cv2.imread("output/0slapper.jpg")
+		sample_img = cv2.imread("data/0frame.jpg")
 		height, width, _, = sample_img.shape	
 		video = cv2.VideoWriter('video.avi', cv2.VideoWriter_fourcc(*'DIVX'), self.FPS, (width, height))
 		for _, _, files in os.walk(self.directory):
 			files.sort(key=natural_keys)
 			for file in files:	
-				image = cv2.imread("output/"+file)
+				image = cv2.imread("data/"+file)
 				video.write(image)	
 		cv2.destroyAllWindows()
 		video.release()

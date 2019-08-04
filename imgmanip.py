@@ -331,7 +331,6 @@ def faded(img,percent_zoom):
 def horizontal_glitch(img, bands):
     img = img.copy()
     height, width, _ = img.shape
-    print("height:", height, "width:", width)
     xcoords = [random.randint(20,height-20) for _ in range(bands)]
     for x in xcoords:
         for i in range(width):
@@ -358,35 +357,26 @@ proj_dir = os.path.dirname(os.path.abspath(__file__))
 data_dir = os.path.join(proj_dir, "data")
 output_dir = os.path.join(proj_dir, "output")
 
-glitch = horizontal_glitch(img, 10)
-cv2.imshow('glitch', glitch)
-cv2.waitKey(0)
+
+
+
 """
 from vidsplit import Vidsplitter
 vid = Vidsplitter("parrot.mp4", 1)
-vid.split()
+vid.split()"""
 for _, _, files in os.walk(data_dir):
     files.sort(key=natural_keys)
-    counter = 0
-    skip = 20
+    skip = 1
     for i, file in enumerate(files):
         if not i%skip:
             img = cv2.imread("data/" + file)
-            img = color(img, 'random')
+            img = horizontal_glitch(img,10)
             cv2.imwrite("data/" + file, img)
-        if counter < 50:
-            counter += 3
-            img = cv2.imread("data/" + file)
-            img = faded(img, counter)
-            cv2.imwrite("output/" + file, img)
-        if counter >= 50:
-            counter = 0
 from vidsplice import Vidsplicer
 
-vid = Vidsplicer(output_dir, fps=24)
+vid = Vidsplicer(data_dir, fps=24)
 vid.join()                                      
 
-"""
 
 
 
