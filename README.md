@@ -7,7 +7,7 @@ For now, it's just a CLI for testing my image/video manipulation libraries.
 # Features
 - <b>DeepDream for video</b>: pretty much just a clone of Hvass Lab's DeepDream code, connected to two video <-> frame images conversion libraries I wrote.
 
-![DeepDream for video]("deepdream gif.gif")
+![DeepDream for video](deepdream.gif)
 
 - <b>Horizontal glitch effect</b>: Ya the title pretty much says it. I just shift random rows of pixels by 50.
 
