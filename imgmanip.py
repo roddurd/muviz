@@ -329,7 +329,7 @@ def faded(img,percent_zoom):
     return img
 
 def horizontal_glitch(img, bands, coords=None):
-#xcoords for the glitch bands can be passed, so that subsequent glitches are nearby.
+#coords for the glitch bands can be passed, so that subsequent glitches are nearby.
     img = img.copy()
     height, width, _ = img.shape
     if coords:
@@ -360,26 +360,27 @@ proj_dir = os.path.dirname(os.path.abspath(__file__))
 data_dir = os.path.join(proj_dir, "data")
 output_dir = os.path.join(proj_dir, "output")
 
+
+"""
 from vidsplit import Vidsplitter
 vid = Vidsplitter("video.mp4", 1)
 vid.split()
-
+"""
 for _, _, files in os.walk(data_dir):
     files.sort(key=natural_keys)
     skip = 1
-    coords = []
+    zoom = 5
     for i, file in enumerate(files):
-      
-        if i==0:
-            img = cv2.imread('data/' + file)
-            img, coords = horizontal_glitch(img,5)
-        if not i%skip:
-            img = cv2.imread("data/" + file)
-            img, coords = horizontal_glitch(img,5,coords)
-            cv2.imwrite("data/" + file, img)
+        img = cv2.imread('data/' + file)
+        img = faded(img, zoom)
+        zoom = 5 if zoom > 25 else zoom + 5
+        cv2.imwrite("output/" + file, img)
+
+"""
+"""
 from vidsplice import Vidsplicer
 
-vid = Vidsplicer(data_dir, fps=24)
+vid = Vidsplicer(output_dir, fps=24)
 vid.join()                                      
 print("joined")
 
