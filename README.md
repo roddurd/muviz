@@ -16,5 +16,7 @@ For now, it's just a CLI for testing my image/video manipulation libraries.
 
 - <b>Faded effect</b>: Kind of like seeing double, but its like quadruple and the duplicate images are just slightly transparent and incrementally zoomed in versions of the frame.
 
+![Faded effect](faded.gif)
+
 - Ya that's kind of it rn. I had another function that draws random fractures on the screen but its kinda boring. And some very basic img manipulation functions like zooming from center, opacity, brighten/darken, grey/R/G/B-scale, etc.
 
