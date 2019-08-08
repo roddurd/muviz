@@ -362,25 +362,28 @@ output_dir = os.path.join(proj_dir, "output")
 
 
 """
+"""
 from vidsplit import Vidsplitter
-vid = Vidsplitter("video.mp4", 1)
+vid = Vidsplitter("video.mp4", 6)
 vid.split()
+"""
 """
 for _, _, files in os.walk(data_dir):
     files.sort(key=natural_keys)
     skip = 1
-    zoom = 5
+    zoomp = 5
     for i, file in enumerate(files):
         img = cv2.imread('data/' + file)
-        img = faded(img, zoom)
-        zoom = 5 if zoom > 25 else zoom + 5
+        img = faded(img, zoomp)
+        img = faded(img, zoomp+3)
+        zoomp = 5 if zoomp > 35 else zoomp + 5
         cv2.imwrite("output/" + file, img)
 
 """
 """
 from vidsplice import Vidsplicer
 
-vid = Vidsplicer(output_dir, fps=24)
+vid = Vidsplicer(output_dir, fps=12)
 vid.join()                                      
 print("joined")
 
