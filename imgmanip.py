@@ -327,6 +327,15 @@ def faded(img,percent_zoom):
     alpha = 0.4
     cv2.addWeighted(img2, alpha, img, 1-alpha, 0, img)
     return img
+def shuffle(img, percent):
+    #Shuffle the rows of pixels in the image. Specify the percentage of shuffling from 1-100.
+    img = img.copy()
+    height, width, _ = img.shape
+    for i, row in enumerate(img):
+        for j, (r, g, b) in enumerate(row):
+            img[i,j] = img[random.randint(0,height-1), j]
+
+    return img
 
 def horizontal_glitch(img, bands, coords=None):
 #coords for the glitch bands can be passed, so that subsequent glitches are nearby.
@@ -362,7 +371,6 @@ output_dir = os.path.join(proj_dir, "output")
 
 
 """
-"""
 from vidsplit import Vidsplitter
 vid = Vidsplitter("video.mp4", 6)
 vid.split()
@@ -381,14 +389,12 @@ for _, _, files in os.walk(data_dir):
 
 """
 """
-from vidsplice import Vidsplicer
+"""
 
-vid = Vidsplicer(output_dir, fps=12)
-vid.join()                                      
-print("joined")
+zimg = shuffle(img, 10)
+cv2.imshow('shuffled', zimg)
 
-
-
+cv2.waitKey(0)
 
 
 
