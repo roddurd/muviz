@@ -329,11 +329,13 @@ def faded(img,percent_zoom):
     return img
 def shuffle(img, percent):
     #Shuffle the rows of pixels in the image. Specify the percentage of shuffling from 1-100.
+    skip = 100 - percent
     img = img.copy()
     height, width, _ = img.shape
     for i, row in enumerate(img):
         for j, (r, g, b) in enumerate(row):
-            img[i,j] = img[random.randint(0,height-1), j]
+            if not i % skip:
+                img[i,j] = img[random.randint(0,height-1), j]
 
     return img
 
@@ -391,7 +393,7 @@ for _, _, files in os.walk(data_dir):
 """
 """
 
-zimg = shuffle(img, 10)
+zimg = shuffle(img, 80)
 cv2.imshow('shuffled', zimg)
 
 cv2.waitKey(0)
