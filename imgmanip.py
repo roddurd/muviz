@@ -333,10 +333,10 @@ def shuffle(img, percent):
     img = img.copy()
     height, width, _ = img.shape
     for i, row in enumerate(img):
-        for j, (r, g, b) in enumerate(row):
-            if not i % skip:
-                img[random.randint(0,height-1),j] = img[random.randint(0,height-1), j]
-
+        for j, pixel in enumerate(row):
+            if not j % skip and i % percent :
+              #img[random.randint(0,height-1),:] = img[i, :]
+              img[i, :] = img[random.randint(0,height-1),:]
     return img
 
 def horizontal_glitch(img, bands, coords=None):
@@ -393,7 +393,7 @@ for _, _, files in os.walk(data_dir):
 """
 """
 
-zimg = shuffle(img, 90)
+zimg = shuffle(img, 5)
 cv2.imshow('shuffled', zimg)
 
 cv2.waitKey(0)
