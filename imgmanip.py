@@ -335,7 +335,7 @@ def shuffle(img, percent):
     for i, row in enumerate(img):
         for j, (r, g, b) in enumerate(row):
             if not i % skip:
-                img[i,j] = img[random.randint(0,height-1), j]
+                img[random.randint(0,height-1),j] = img[random.randint(0,height-1), j]
 
     return img
 
@@ -393,7 +393,7 @@ for _, _, files in os.walk(data_dir):
 """
 """
 
-zimg = shuffle(img, 80)
+zimg = shuffle(img, 90)
 cv2.imshow('shuffled', zimg)
 
 cv2.waitKey(0)
