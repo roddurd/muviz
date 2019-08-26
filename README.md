@@ -11,6 +11,7 @@ For now, it's just a CLI for testing my image/video manipulation libraries.
 
 - <b>Horizontal glitch effect</b>: Ya the title pretty much says it. I just shift random rows of pixels by 50.
 
+- <b>Frame shuffle</b>: shuffle rows of pixels in the image randomly, and with a percentage intensity.
 
 ![Horizontal glitch effect](glitched.gif)
 
@@ -18,5 +19,6 @@ For now, it's just a CLI for testing my image/video manipulation libraries.
 
 ![Faded effect](faded.gif)
 
-- Ya that's kind of it rn. I had another function that draws random fractures on the screen but its kinda boring. And some very basic img manipulation functions like zooming from center, opacity, brighten/darken, grey/R/G/B-scale, etc.
+- Ya that's kind of it rn. Plus some very basic img manipulation functions like zooming from center, opacity, brighten/darken, grey/R/G/B-scale, etc.
+
 
