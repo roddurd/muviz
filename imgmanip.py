@@ -355,6 +355,18 @@ def horizontal_glitch(img, bands, coords=None):
                 img[x:x+10,i-50] = img[x:x+10,i]
                 img[x:x+10,i] = img[x:x+10,width-i]
     return img, xcoords
+
+def scramble(img, center, radius):
+    img = img.copy()
+    columns = list(range(center[0]-radius, center[0]+radius)) 
+    rows = list(range(center[1]-radius, center[1]+radius))
+    for c in columns :
+        for r in rows :
+            img[c][r] = img[random.choice(columns)][random.choice(rows)]
+    return img
+        
+
+
 #for file sorting
 def atoi(text):
     return int(text) if text.isdigit() else False
@@ -393,8 +405,8 @@ for _, _, files in os.walk(data_dir):
 """
 """
 
-zimg = shuffle(img, 5)
-cv2.imshow('shuffled', zimg)
+zimg = scramble(img, (200, 500),55)
+cv2.imshow('scrambled', zimg)
 
 cv2.waitKey(0)
 
