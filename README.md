@@ -19,6 +19,10 @@ For now, it's just a CLI for testing my image/video manipulation libraries.
 
 ![Faded effect](faded.gif)
 
+- <b>Vertical offset</b>: offset all rows of pixels up by a given value
+
+![Vertical offset](vertoffset.gif)
+
 - Ya that's kind of it rn. Plus some very basic img manipulation functions like zooming from center, opacity, brighten/darken, grey/R/G/B-scale, etc.
 
 
