@@ -369,7 +369,8 @@ def scramble(img, center, radius):
 
 
 def vert_offset(img, offset):
-#vertical offset; shift all pixels up by offset (there will be a horizontal line across the screen where the frame is stitched at its ends).
+#vertical offset; shift all pixels up by offset
+#(there will be a horizontal line across the screen where the frame is stitched at its ends).
     imgo = img.copy()
     height, width, _ = img.shape
     offset = offset % height #in case offset is too high, just mod it
@@ -381,6 +382,18 @@ def vert_offset(img, offset):
     return imgo
     
 
+def hor_offset(img, offset):
+#horizontal offset; shift all pixels right by offset
+#(there will be a vertical line across the screen where the frame is stitched at its ends).
+    imgo = img.copy()
+    height, width, _ = img.shape
+    offset = offset % width #in case offset is too high, just mod it
+    for c in range(width):
+        if c >= offset:
+            imgo[:,c] = img[:,c-offset]
+        else:
+            imgo[:,c] = img[:,width-offset+c]
+    return imgo
 
 #for file sorting
 def atoi(text):
@@ -405,19 +418,20 @@ vid = Vidsplitter("video.mp4", 6)
 vid.split()
 """
 """  FOR DOING SEQUENTIAL STUFF ON IMAGES IN data_dir
+"""
 print("working...")
+sys.stdout.flush()
 for _, _, files in os.walk(data_dir):
     files.sort(key=natural_keys)
     skip = 1
     offset = 50 
     for i, file in enumerate(files):
         img = cv2.imread('data/' + file)
-        img = vert_offset(img, offset)
+        img = hor_offset(img, offset)
         cv2.imwrite("output/" + file, img)
         offset += 150
 print("done!")
 
-"""
 """
 
 zimg = vert_offset(img,370)
