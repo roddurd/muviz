@@ -3,6 +3,7 @@ import os
 import numpy as np
 import re
 import random
+import sys
 img = cv2.imread("pfp3.jpg")
 
 
@@ -357,6 +358,7 @@ def horizontal_glitch(img, bands, coords=None):
     return img, xcoords
 
 def scramble(img, center, radius):
+#scramble all of the pixels within a certain square radius of the given center.
     img = img.copy()
     columns = list(range(center[0]-radius, center[0]+radius)) 
     rows = list(range(center[1]-radius, center[1]+radius))
@@ -364,7 +366,20 @@ def scramble(img, center, radius):
         for r in rows :
             img[c][r] = img[random.choice(columns)][random.choice(rows)]
     return img
-        
+
+
+def vert_offset(img, offset):
+#vertical offset; shift all pixels up by offset (there will be a horizontal line across the screen where the frame is stitched at its ends).
+    imgo = img.copy()
+    height, width, _ = img.shape
+    offset = offset % height #in case offset is too high, just mod it
+    for r in range(height):
+        if r >= offset:
+            imgo[:][r] = img[:][r-offset]
+        else:
+            imgo[:][r] = img[:][height-offset+r]   
+    return imgo
+    
 
 
 #for file sorting
@@ -389,26 +404,33 @@ from vidsplit import Vidsplitter
 vid = Vidsplitter("video.mp4", 6)
 vid.split()
 """
-"""
+"""  FOR DOING SEQUENTIAL STUFF ON IMAGES IN data_dir
+print("working...")
 for _, _, files in os.walk(data_dir):
     files.sort(key=natural_keys)
     skip = 1
-    zoomp = 5
+    offset = 50 
     for i, file in enumerate(files):
         img = cv2.imread('data/' + file)
-        img = faded(img, zoomp)
-        img = faded(img, zoomp+3)
-        zoomp = 5 if zoomp > 35 else zoomp + 5
+        img = vert_offset(img, offset)
         cv2.imwrite("output/" + file, img)
+        offset += 150
+print("done!")
 
 """
 """
-"""
 
-zimg = scramble(img, (200, 500),55)
-cv2.imshow('scrambled', zimg)
+zimg = vert_offset(img,370)
+cv2.imshow('offset', zimg)
 
 cv2.waitKey(0)
+"""
+print("joining...")
+sys.stdout.flush()
+from vidsplice import Vidsplicer
+vid = Vidsplicer(output_dir, 24)
+vid.join()
+print("done.")
 
 
 
