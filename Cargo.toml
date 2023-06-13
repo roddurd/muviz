@@ -1,0 +1,10 @@
+[package]
+name = "muviz"
+version = "0.1.0"
+edition = "2023"
+authors = ["Roddur Dasgupta <udasgupt@usc.edu>"]
+
+[dependencies]
+tch = "0.4.1"
+ffmpeg-next = "4.4.5"
+image = "0.23.14"
